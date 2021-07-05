@@ -3,12 +3,12 @@ import React, { Component } from 'react'
 // import signup css file
 import "./Signup.css"
 // we bring functions from validator
-import {isAlpha, isStrongPassword, isAlphanumeric, isEmail, isEmpty} from "validator"
+import {isAlpha, isStrongPassword, isAlphanumeric, isEmail} from "validator"
 // bring Axios file
 import Axios from "../utils/Axios"
 // bring toast for notifications
 import { toast } from 'react-toastify';
-;
+import checkUser from '../utils/checkUser';
 
 export class Signup extends Component {
     // create state
@@ -36,6 +36,13 @@ export class Signup extends Component {
         confirmPasswordOnFocus:false,
 
     };
+
+    componentDidMount(){
+        let check = checkUser()
+        if(check){
+            this.props.history.push("/movie")
+        }
+    }
 //Here we handle first and lst names to check if inputs are empty 
     handleFirstAndLastNameInput = (event) =>{
         // if the length is 0 than we assign fristName or Lastname error messages and keep submit button disabled

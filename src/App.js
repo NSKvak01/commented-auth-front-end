@@ -1,44 +1,73 @@
-// import React, { Component } from 'react'
+import React, { Component } from 'react'
 
-// We bring react-router-dom to be able to link components and use them as paths on web page. 
-import{BrowserRouter as Router, Route} from "react-router-dom"
-// We bring Signup from components
-import Signup from './components/Signup/Signup'
-// Bring Login from components
-import Login from "./components/Login/Login"
-// Bring Home from components
-import Home from "./components/Home/Home"
-// Bring navigation bar from components
-import Nav from "./components/Nav/Nav"
-// bring css file
 import "./App.css"
-// bring react
-import React from "react"
-// bring react-toastify for stylish notifications
-import { ToastContainer, toast } from 'react-toastify';
-// and toastify css file
+// bring toastcontainer
+import { ToastContainer} from 'react-toastify';
+// bring jwt decoder
+import jwtDecode from "jwt-decode"
+// bring toastify css
 import 'react-toastify/dist/ReactToastify.css';
+// bring MainRouter
+import MainRouter from "./MainRouter"
 
 
-export class App extends Router {
+// we export class App with user: null
+export class App extends Component {
+  state = {
+    user:null,
+  }
+
+  
+// once the page is loaded, we get jwt token from local storage 
+componentDidMount (){
+  let getJwtToken = window.localStorage.getItem("jwtToken")
+// if there is a token we grab current time, decode token and grab expiration time
+  if(getJwtToken){
+    const currentTime = Date.now() /1000
+    let decodedJwtToken = jwtDecode (getJwtToken)
+    // if user token is still valid
+    if(decodedJwtToken.exp>currentTime){
+      // use handleUserLogin function that stores email
+      this.handleUserLogin(decodedJwtToken)
+    } else {
+      // else handleUserLogout that sets user back to null
+      this.handleUserLogout()
+    }
+  }
+}  
+
+// handleuserlogout to set user to null
+  handleUserLogout = ()=>{
+    window.localStorage.removeItem("jwtToken")
+    this.setState({
+      user:null
+    })
+  }
+
+  // funciton to handle login and store user email
+  handleUserLogin = (user) =>{
+    this.setState({
+      user:{
+        email:user.email
+      }
+    })
+  }
+
   render() {
     return (
-      // here we bring router
-      <Router>
-        {/* also bring notifications */}
-        <ToastContainer />
-        {/* navigation bar */}
-        <Nav />
+      
         <React.Fragment>
-          {/* we use Route and exact path to sighup page and link it to Signup component */}
-        <Route exact path="/sign-up" component={Signup} />
-          {/* we use Route and exact path to login page and link it to Login component */}
-        <Route exact path="/login" component={Login} />
-        {/* If we don't type anything, it should bring us to homepage */}
-        <Route exact path="/" component={Home} />
+
+          <ToastContainer />
+      
+          <MainRouter 
+          user = {this.state.user}
+          handleUserLogin = {this.handleUserLogin}
+          handleUserLogout={this.handleUserLogout}/>
+
         </React.Fragment>
-      </Router>
-    )
+)
+    
   }
 }
 

@@ -3,6 +3,11 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 // we reset css and _base file and bring it before index.css
 import './_base.css'
+
+import "./components/Movie/Movie.css"
+import "./components/Nav/Nav.css"
+import "./components/Login/Login.css"
+import "./components/Signup/Signup.css"
 import './index.css';
 // import App.js
 import App from './App';

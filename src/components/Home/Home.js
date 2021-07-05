@@ -1,5 +1,7 @@
 import React, { Component } from "react";
+// we bring react component
 
+// then we create class Home from component
 export class Home extends Component {
   render() {
     return (
@@ -11,4 +13,5 @@ export class Home extends Component {
   }
 }
 
+// export Home to use in other components
 export default Home;
